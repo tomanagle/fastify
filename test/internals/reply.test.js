@@ -46,6 +46,7 @@ test('Once called, Reply should return an object with methods', t => {
   t.equal(typeof reply.header, 'function')
   t.equal(typeof reply.serialize, 'function')
   t.equal(typeof reply.getResponseTime, 'function')
+  t.equal(typeof reply.elapsedTime, 'function')
   t.equal(typeof reply[kReplyHeaders], 'object')
   t.same(reply.raw, response)
   t.equal(reply[kRouteContext], context)
@@ -1533,6 +1534,74 @@ test('reply.getResponseTime() should return the same value after a request is fi
 
   fastify.addHook('onResponse', (req, reply) => {
     t.equal(reply.getResponseTime(), reply.getResponseTime())
+    t.end()
+  })
+
+  fastify.inject({ method: 'GET', url: '/' })
+})
+
+test('reply.elapsedTime() should return 0 before the timer is initialised on the reply by setting up response listeners', t => {
+  t.plan(1)
+  const response = { statusCode: 200 }
+  const reply = new Reply(response, null)
+  t.equal(reply.elapsedTime(), 0)
+})
+
+test('reply.elapsedTime() should return a number greater than 0 after the timer is initialised on the reply by setting up response listeners', t => {
+  t.plan(1)
+  const fastify = require('../..')()
+  fastify.route({
+    method: 'GET',
+    url: '/',
+    handler: (req, reply) => {
+      reply.send('hello world')
+    }
+  })
+
+  fastify.addHook('onResponse', (req, reply) => {
+    t.ok(reply.elapsedTime() > 0)
+    t.end()
+  })
+
+  fastify.inject({ method: 'GET', url: '/' })
+})
+
+test('reply.elapsedTime() should return the time since a request started while inflight', t => {
+  t.plan(1)
+  const fastify = require('../..')()
+  fastify.route({
+    method: 'GET',
+    url: '/',
+    handler: (req, reply) => {
+      reply.send('hello world')
+    }
+  })
+
+  fastify.addHook('preValidation', (req, reply, done) => {
+    t.not(reply.elapsedTime(), reply.elapsedTime())
+    done()
+  })
+
+  fastify.addHook('onResponse', (req, reply) => {
+    t.end()
+  })
+
+  fastify.inject({ method: 'GET', url: '/' })
+})
+
+test('reply.elapsedTime() should return the same value after a request is finished', t => {
+  t.plan(1)
+  const fastify = require('../..')()
+  fastify.route({
+    method: 'GET',
+    url: '/',
+    handler: (req, reply) => {
+      reply.send('hello world')
+    }
+  })
+
+  fastify.addHook('onResponse', (req, reply) => {
+    t.equal(reply.elapsedTime(), reply.elapsedTime())
     t.end()
   })
 
