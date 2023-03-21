@@ -18,7 +18,7 @@
   - [.removeTrailer(key)](#removetrailerkey)
   - [.redirect([code ,] dest)](#redirectcode--dest)
   - [.callNotFound()](#callnotfound)
-    - [.elapsedTime()](#elapsedTime)
+  - [.elapsedTime()](#elapsedTime)
   - [.getResponseTime()](#getresponsetime)
   - [.type(contentType)](#typecontenttype)
   - [.getSerializationFunction(schema | httpStatus, [contentType])](#getserializationfunctionschema--httpstatus)
