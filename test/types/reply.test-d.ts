@@ -29,6 +29,7 @@ const getHandler: RouteHandlerMethod = function (_request, reply) {
   expectType<() => FastifyReply>(reply.hijack)
   expectType<() => void>(reply.callNotFound)
   expectType<() => number>(reply.getResponseTime)
+  expectType<() => number>(reply.elapsedTime)
   expectType<(contentType: string) => FastifyReply>(reply.type)
   expectType<(fn: (payload: any) => string) => FastifyReply>(reply.serializer)
   expectType<(payload: any) => string | ArrayBuffer | Buffer>(reply.serialize)

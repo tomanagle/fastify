@@ -18,6 +18,7 @@
   - [.removeTrailer(key)](#removetrailerkey)
   - [.redirect([code ,] dest)](#redirectcode--dest)
   - [.callNotFound()](#callnotfound)
+    - [.elapsedTime()](#elapsedTime)
   - [.getResponseTime()](#getresponsetime)
   - [.type(contentType)](#typecontenttype)
   - [.getSerializationFunction(schema | httpStatus, [contentType])](#getserializationfunctionschema--httpstatus)
@@ -323,6 +324,16 @@ hook specified in [`setNotFoundHandler`](./Server.md#set-not-found-handler).
 reply.callNotFound()
 ```
 
+### .elapsedTime()
+<a id="elapsedTime"></a>
+
+Invokes the custom response time getter to calculate the amount of time passed
+since the request was started.
+
+```js
+const milliseconds = reply.elapsedTime()
+```
+
 ### .getResponseTime()
 <a id="getResponseTime"></a>
 
@@ -331,6 +342,8 @@ since the request was started.
 
 Note that unless this function is called in the [`onResponse`
 hook](./Hooks.md#onresponse) it will always return `0`.
+
+*`.getResponseTime` is deprecated. Please use [.elapsedTime()](#elapsedTime) instead.*
 
 ```js
 const milliseconds = reply.getResponseTime()
